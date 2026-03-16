@@ -1,14 +1,30 @@
 {
-  "name": "navigator",
-  "private": true,
+  "name": "@ogis/navigator",
   "version": "1.0.0",
   "type": "module",
+  "description": "A Vue 3-based map navigator powered by @ogis/waymark-js",
+  "main": "./dist/navigator.js",
+  "module": "./dist/navigator.js",
+  "exports": {
+    ".": {
+      "import": "./dist/navigator.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm run screenshot",
+    "build:lib": "vite build --config vite.lib.config.js",
     "test": "playwright test",
     "screenshot": "playwright test tests/e2e/screenshot.spec.js tests/e2e/locate-panel.spec.js",
     "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "@ogis/waymark-js": "^3.0.0-alpha",
+    "vue": "^3.5.30"
   },
   "dependencies": {
     "@ogis/waymark-js": "^3.0.0-alpha",

@@ -3,6 +3,11 @@ import { onMounted, ref } from "vue";
 import { createInstance } from "@ogis/waymark-js";
 import "@ogis/waymark-js/dist/waymark-js.css";
 
+const props = defineProps({
+	debug: { type: Boolean, default: false },
+	mapOptions: { type: Object, default: () => ({}) },
+});
+
 // UI
 import Top from "@/components/ui/top.vue";
 // import Nav from "@/components/ui/side/nav.vue";
@@ -42,10 +47,11 @@ const instanceReady = ref(false);
 onMounted(() => {
 	// Create & set the main Waymark Instance
 	createInstance({
-		debug: false,
+		debug: props.debug,
 		id: "waymark",
 		mapOptions: {
 			attributionControl: false,
+			...props.mapOptions,
 		},
 		onLoad: (WaymarkInstance) => {
 			setInstance(WaymarkInstance);
