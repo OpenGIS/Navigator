@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { createInstance } from "@ogis/waymark-js";
 import "@ogis/waymark-js/dist/waymark-js.css";
+import iconSprite from "@/assets/icons/ogisNav-icons.svg?raw";
 
 const props = defineProps({
 	debug: { type: Boolean, default: false },
@@ -62,6 +63,7 @@ onMounted(() => {
 </script>
 
 <template>
+	<div style="display: none" v-html="iconSprite"></div>
 	<div id="top" v-if="instanceReady">
 		<Top />
 	</div>

@@ -21,6 +21,6 @@ defineProps({
 
 <template>
   <svg :width="width" :height="height" :fill="fill">
-    <use :xlink:href="`/static/icons/ogisNav-icons.svg#${name}`" />
+    <use :xlink:href="`#${name}`" />
   </svg>
 </template>

@@ -74,8 +74,12 @@ export default class Position extends WaymarkMarker {
             typeof heading === "number" && !isNaN(heading) ? heading : null;
 
         const iconHTML = rotation
-            ? `<svg class="oi" width="40" height="40" fill="${getColour("primary")}" style="display: inline-block; transform: rotate(${rotation}deg);"><use xlink:href="/static/icons/ogisNav-icons.svg#position-heading" /></svg>`
-            : `<svg class="oi" width="40" height="40" fill="${getColour("primary")}" style="display: inline-block;"><use xlink:href="/static/icons/ogisNav-icons.svg#position" /></svg>`;
+            ? `<svg class="oi" width="40" height="40" fill="${getColour(
+                  "primary",
+              )}" style="display: inline-block; transform: rotate(${rotation}deg);"><use xlink:href="#position-heading" /></svg>`
+            : `<svg class="oi" width="40" height="40" fill="${getColour(
+                  "primary",
+              )}" style="display: inline-block;"><use xlink:href="#position" /></svg>`;
 
         return {
             ogisNav: ogisNav,
