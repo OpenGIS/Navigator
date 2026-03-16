@@ -13,11 +13,13 @@
   },
   "main": "./dist/navigator.js",
   "module": "./dist/navigator.js",
+  "style": "./dist/navigator.css",
   "exports": {
     ".": {
       "import": "./dist/navigator.js"
     },
-    "./navigator.css": "./dist/navigator.css"
+    "./navigator.css": "./dist/navigator.css",
+    "./dist/navigator.css": "./dist/navigator.css"
   },
   "files": [
     "dist"
