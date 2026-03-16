@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A Vue 3-based map navigator powered by @ogis/waymark-js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenGIS/Navigator.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/navigator.js",
   "module": "./dist/navigator.js",
   "exports": {
@@ -18,6 +26,7 @@
     "dev": "vite",
     "build": "vite build",
     "test": "playwright test",
+    "prepublishOnly": "npm run build",
     "screenshot": "playwright test tests/e2e/screenshot.spec.js tests/e2e/locate-panel.spec.js",
     "preview": "vite preview"
   },
