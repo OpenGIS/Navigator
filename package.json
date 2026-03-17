@@ -34,7 +34,7 @@
     "preview": "vite preview"
   },
   "peerDependencies": {
-    "@ogis/waymark-js": "^3.0.0-alpha",
+    "@ogis/waymark-js": "latest",
     "vue": "^3.5.30"
   },
   "dependencies": {
