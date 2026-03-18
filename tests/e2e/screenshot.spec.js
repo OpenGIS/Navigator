@@ -1,19 +1,115 @@
-import { test, expect } from '@playwright/test';
-import path from 'path';
+import { test, expect } from "@playwright/test";
+import path from "path";
 
-test('take homepage screenshot', async ({ page }, testInfo) => {
-  // Go to the homepage
-  await page.goto('/');
+const targetLocation = {
+  latitude: 50.6539,
+  longitude: -128.0094,
+};
 
-  // Wait for the app to be ready
-  await page.waitForLoadState('networkidle');
-  
-  // A small delay to ensure map tiles might have loaded if networkidle isn't enough
-  await page.waitForTimeout(2000);
+const targetZoom = 16;
 
-  // Define the path for the screenshot
-  // Use process.cwd() to resolve from project root
-  const screenshotPath = path.resolve(process.cwd(), 'assets/screenshots/app-preview.png');
-  
+test("take homepage screenshot", async ({ context, page }) => {
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation(targetLocation);
+
+  await page.addInitScript(
+    ({ latitude, longitude, zoom }) => {
+      localStorage.clear();
+
+      localStorage.setItem(
+        "navigator_waymark",
+        JSON.stringify({
+          mapView: {
+            center: [longitude, latitude],
+            zoom,
+          },
+        }),
+      );
+
+      // Keep history non-empty so first locate click does not force zoom=14.
+      localStorage.setItem(
+        "navigator_position",
+        JSON.stringify({
+          positionMode: null,
+          currentPosition: null,
+          positionHistory: [{ id: "seed-position-history" }],
+        }),
+      );
+    },
+    {
+      ...targetLocation,
+      zoom: targetZoom,
+    },
+  );
+
+  await page.goto("/");
+  await expect(page.locator("#waymark canvas")).toBeVisible();
+
+  const locateBtn = page.locator("#locate-button");
+  const panelToggleBtn = page.locator(".navbar-toggler");
+  const panel = page.locator("#side-panel");
+
+  // show mode
+  await locateBtn.click();
+  await expect(page.locator(".maplibregl-marker .oi")).toBeVisible({
+    timeout: 10000,
+  });
+
+  // follow mode
+  await locateBtn.click();
+  await expect.poll(async () => {
+    const use = locateBtn.locator("use");
+    return (
+      (await use.getAttribute("xlink:href")) || (await use.getAttribute("href"))
+    );
+  }).toMatch(/position-lock/);
+
+  await expect.poll(async () => {
+    return page.evaluate(() => {
+      const saved = localStorage.getItem("navigator_waymark");
+      if (!saved) return null;
+      const mapView = JSON.parse(saved).mapView;
+      return typeof mapView?.zoom === "number" ? mapView.zoom : null;
+    });
+  }).toBeCloseTo(targetZoom, 0);
+
+  // NW heading (315°): heading = 360 - alpha, so alpha = 45.
+  await expect(async () => {
+    await page.evaluate(() => {
+      const eventType =
+        "ondeviceorientationabsolute" in window
+          ? "deviceorientationabsolute"
+          : "deviceorientation";
+
+      const event = new Event(eventType, { bubbles: true });
+      Object.defineProperty(event, "alpha", { value: 45 });
+      Object.defineProperty(event, "absolute", { value: true });
+
+      window.dispatchEvent(event);
+    });
+
+    const markerUse = page.locator(".maplibregl-marker .oi use").first();
+    const href =
+      (await markerUse.getAttribute("xlink:href")) ||
+      (await markerUse.getAttribute("href"));
+
+    expect(href).toMatch(/position-heading/);
+  }).toPass({ timeout: 15000, interval: 1000 });
+
+  await panelToggleBtn.click();
+  await expect(panel).toBeVisible();
+  await expect(panel).toHaveClass(/show/);
+  await expect(panel).toHaveCSS("transform", "none");
+  await expect(page.getByText("Current Location")).toBeVisible();
+  await expect(panel.getByText("50.653900")).toBeVisible();
+  await expect(panel.getByText("-128.009400")).toBeVisible();
+  await expect(panel.getByText("NW")).toBeVisible();
+  await expect(panel.getByText("315°")).toBeVisible();
+
+  const screenshotPath = path.resolve(
+    process.cwd(),
+    "assets/screenshots/app-preview.png",
+  );
+
   await page.screenshot({ path: screenshotPath, fullPage: true });
 });
