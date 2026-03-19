@@ -16,7 +16,7 @@ export default defineConfig({
       entry: fileURLToPath(new URL("./src/index.js", import.meta.url)),
       name: "Navigator",
       formats: ["es"],
-      fileName: "navigator",
+      // fileName: "navigator",
     },
     rollupOptions: {
       external: ["vue", "@ogis/waymark-js"],

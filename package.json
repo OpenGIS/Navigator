@@ -28,6 +28,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:demo": "vite build --config vite.demo.config.js",
     "test": "playwright test",
     "prepublishOnly": "npm run build",
     "screenshot": "playwright test tests/e2e/screenshot.spec.js tests/e2e/locate-panel.spec.js",
