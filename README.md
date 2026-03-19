@@ -4,7 +4,7 @@ Use your device location and compass to see where you are, anywhere in the world
 
 ![App Preview](assets/screenshots/app-preview.png)
 
-**[&laquo;&laquo; View the Demo &raquo;&raquo;](https://opengis.github.io/Navigator/)**
+**[&laquo;&laquo; View the Demo &raquo;&raquo;](https://www.ogis.org/navigator/)**
 
 ## Thanks Open Source!
 
