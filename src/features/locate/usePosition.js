@@ -1,10 +1,6 @@
 import { computed } from "vue";
 import { useStorage } from "@/composables/useStorage";
-import {
-    getGeoLocation,
-    watchPosition,
-    clearWatchPosition,
-} from "@/helpers/Navigator";
+import { getGeoLocation } from "@/helpers/Navigator";
 import {
     watchCompass,
     clearCompass,
@@ -21,39 +17,31 @@ const state = useStorage("position", {
     positionHistory: [],
 });
 
-let watchId = null;
+let intervalId = null;
 let compassHandler = null;
 
 let lastHeading = null;
-let lastGeoLocation = null;
-let pendingMapUpdate = false;
 
 export const usePosition = () => {
+    const updateHeading = (heading) => {
+        lastHeading = heading;
+    };
+
     const updateMap = () => {
         if (!state.currentPosition) return;
 
-        const { waymarkInstance, whenReady } = useWaymark();
+        const { waymarkInstance } = useWaymark();
 
-        if (!waymarkInstance) {
-            // Map not ready yet; defer until the Waymark instance is available.
-            // The flag prevents stacking duplicate callbacks.
-            if (!pendingMapUpdate) {
-                pendingMapUpdate = true;
-                whenReady(() => {
-                    pendingMapUpdate = false;
-                    updateMap();
-                });
-            }
-            return;
-        }
+        if (!waymarkInstance) return;
 
-        // Add or update the single position feature on the map
+        // Add or update position on map
         if (waymarkInstance.geoJSONStore.hasItem(state.currentPosition.id)) {
             waymarkInstance.geoJSONStore.updateItem(state.currentPosition);
         } else {
             waymarkInstance.geoJSONStore.addItem(state.currentPosition);
         }
 
+        // Follow logic
         if (state.positionMode === "follow") {
             waymarkInstance.mapLibreMap.jumpTo({
                 center: state.currentPosition.geometry.coordinates.slice(0, 2),
@@ -61,9 +49,10 @@ export const usePosition = () => {
         }
     };
 
-    // Called by watchPosition — fires whenever the device moves
-    const updatePosition = (geoLocation) => {
-        lastGeoLocation = geoLocation;
+    const updatePosition = async () => {
+        // Get GeoLocation
+        // https://developer.mozilla.org/en-US/docs/Web/API/GeolocationCoordinates
+        const geoLocation = await getGeoLocation();
 
         if (state.currentPosition instanceof Position) {
             state.currentPosition.update(geoLocation, lastHeading);
@@ -73,7 +62,8 @@ export const usePosition = () => {
             });
         }
 
-        // Snapshot for history (unaffected by future updates)
+        // Add to history
+        // Create a snapshot for history so it doesn't get updated
         const historySnapshot = new Position(geoLocation, lastHeading, {
             id: "current-position",
         });
@@ -86,108 +76,82 @@ export const usePosition = () => {
         updateMap();
     };
 
-    // Called by watchCompass — immediately reflects heading in the marker
-    const updateHeading = (heading) => {
-        lastHeading = heading;
-
-        if (state.currentPosition instanceof Position && lastGeoLocation) {
-            state.currentPosition.update(lastGeoLocation, heading);
-            updateMap();
-        }
-    };
-
     const startPositioning = async () => {
-        if (watchId !== null) return;
+        if (intervalId) return;
 
-        // Request compass permission upfront (iOS requires a user-gesture context)
+        // Compass
         try {
             await requestCompassPermission();
         } catch (error) {
             console.error("Error requesting compass permission:", error);
         }
 
-        // Watch compass — updates heading and redraws marker on every change
-        compassHandler = watchCompass(updateHeading);
+        await updatePosition();
 
-        // Get the initial fix so cyclePositionMode can jump the map immediately.
-        // watchPosition alone is unreliable for the first callback timing across
-        // browsers and test environments.
-        try {
-            const geoLocation = await getGeoLocation();
-            updatePosition(geoLocation);
-        } catch (error) {
-            console.error("Initial position error:", error);
-        }
+        // Start Interval for position updates
+        intervalId = setInterval(() => {
+            updatePosition();
+        }, 5000);
 
-        // Hand off to watchPosition for all subsequent movement-triggered updates
-        watchId = watchPosition(
-            (geoLocation) => updatePosition(geoLocation),
-            (error) => console.error("Position watch error:", error),
-            { enableHighAccuracy: true },
-        );
+        // Watch Compass
+        compassHandler = watchCompass((heading) => {
+            updateHeading(heading);
+        });
     };
 
     const stopPositioning = () => {
-        if (watchId !== null) {
-            clearWatchPosition(watchId);
-            watchId = null;
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
         }
 
         if (compassHandler) {
             clearCompass(compassHandler);
             compassHandler = null;
         }
-
-        lastHeading = null;
-        lastGeoLocation = null;
-        pendingMapUpdate = false;
     };
 
     const cyclePositionMode = async () => {
         if (!state.positionMode) {
-            // Check if first time ever (determines whether to force zoom=14)
+            // Check if first time
             const isFirstTime = state.positionHistory.length === 0;
 
             state.positionMode = "show";
             await startPositioning();
 
-            // Jump to the user's position once the map instance is ready
-            const { waymarkInstance, whenReady } = useWaymark();
-            const jumpToPosition = () => {
-                const { waymarkInstance: wm } = useWaymark();
-                if (wm && state.currentPosition) {
-                    const jumpOptions = {
-                        center: state.currentPosition.geometry.coordinates.slice(
-                            0,
-                            2,
-                        ),
-                    };
-                    if (isFirstTime) jumpOptions.zoom = 14;
-                    wm.mapLibreMap.jumpTo(jumpOptions);
-                }
-            };
+            const { waymarkInstance } = useWaymark();
+            if (state.currentPosition) {
+                const jumpOptions = {
+                    center: state.currentPosition.geometry.coordinates.slice(
+                        0,
+                        2,
+                    ),
+                };
 
-            if (waymarkInstance) {
-                jumpToPosition();
-            } else {
-                whenReady(jumpToPosition);
+                if (isFirstTime) {
+                    jumpOptions.zoom = 14;
+                }
+
+                waymarkInstance.mapLibreMap.jumpTo(jumpOptions);
             }
         } else if (state.positionMode === "show") {
             state.positionMode = "follow";
-            updateMap();
+            updateMap(); // Center map immediately
         } else {
             state.positionMode = null;
             stopPositioning();
 
+            // Remove position from map
             const { waymarkInstance } = useWaymark();
-            if (waymarkInstance && state.currentPosition) {
+            if (state.currentPosition) {
                 waymarkInstance.geoJSONStore.removeItem(state.currentPosition);
             }
         }
     };
 
-    // Resume positioning if positionMode was persisted to localStorage
-    if (state.positionMode && watchId === null) {
+    // Initialize logic:
+    // If state is loaded as not null (from localStorage), ensure we resume positioning.
+    if (state.positionMode && !intervalId) {
         startPositioning();
     }
 

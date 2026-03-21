@@ -9,7 +9,6 @@ const state = useStorage("waymark", {
 });
 
 let waymarkInstance = null;
-const instanceReadyCallbacks = [];
 
 export const useWaymark = () => {
     const setInstance = (instance) => {
@@ -36,21 +35,6 @@ export const useWaymark = () => {
                 state.mapView.zoom = waymarkInstance.mapLibreMap.getZoom();
             }, 1000),
         );
-
-        // Fire any callbacks that were waiting for the instance to be ready
-        while (instanceReadyCallbacks.length) {
-            instanceReadyCallbacks.shift()();
-        }
-    };
-
-    // Calls callback immediately if the instance is already set,
-    // otherwise queues it until setInstance is called.
-    const whenReady = (callback) => {
-        if (waymarkInstance) {
-            callback();
-        } else {
-            instanceReadyCallbacks.push(callback);
-        }
     };
 
     return {
@@ -59,6 +43,5 @@ export const useWaymark = () => {
 
         // Actions
         setInstance,
-        whenReady,
     };
 };
