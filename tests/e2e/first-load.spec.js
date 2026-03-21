@@ -17,36 +17,32 @@ const withWaymarkStorage = (page) =>
     ),
   );
 
-test.describe("First Load Detection", () => {
-  test("isFirstLoad is true on first visit — #content has first-load class", async ({
-    page,
-  }) => {
+test.describe("First Load Alert", () => {
+  test("alert is visible on first visit", async ({ page }) => {
     await withNoWaymarkStorage(page);
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#content")).toHaveClass(/first-load/);
+    await expect(page.locator("#first-load-alert")).toBeVisible();
+    await expect(page.getByText("location button")).toBeVisible();
   });
 
-  test("isFirstLoad is false on returning visit — #content has no first-load class", async ({
-    page,
-  }) => {
+  test("alert is absent on returning visit", async ({ page }) => {
     await withWaymarkStorage(page);
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#content")).not.toHaveClass(/first-load/);
+    await expect(page.locator("#first-load-alert")).toHaveCount(0);
   });
 
-  test("first-load class is absent on reload once navigator_waymark is persisted", async ({
+  test("alert is absent on reload once navigator_waymark is persisted", async ({
     page,
   }) => {
     // Fresh browser context already has empty localStorage — no init script needed.
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // Confirm we start in first-load state
-    await expect(page.locator("#content")).toHaveClass(/first-load/);
+    await expect(page.locator("#first-load-alert")).toBeVisible();
 
     // Simulate navigator_waymark being written (as useWaymark does on moveend)
     await page.evaluate(() => {
@@ -56,10 +52,22 @@ test.describe("First Load Detection", () => {
       );
     });
 
-    // On the next page load, navigator_waymark exists — isFirstLoad must be false
     await page.reload();
     await page.waitForLoadState("networkidle");
-    await expect(page.locator("#content")).not.toHaveClass(/first-load/);
+    await expect(page.locator("#first-load-alert")).toHaveCount(0);
+  });
+
+  test("alert can be dismissed", async ({ page }) => {
+    await withNoWaymarkStorage(page);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.locator("#first-load-alert")).toBeVisible();
+
+    // Click the dismiss (close) button
+    await page.locator("#first-load-alert .btn-close").click();
+
+    await expect(page.locator("#first-load-alert")).toHaveCount(0);
   });
 });
 
