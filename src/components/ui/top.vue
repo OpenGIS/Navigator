@@ -1,5 +1,6 @@
 <script setup>
 import Position from "@/components/ui/top/position.vue";
+import Alerts from "@/components/ui/top/alerts.vue";
 import LocatePanel from "@/features/locate/panel.vue";
 import { useUI } from "@/core/useUI";
 import Icon from "@/components/ui/icon.vue";
@@ -40,6 +41,8 @@ const { togglePanel } = useUI();
     </div>
   </nav>
   <!-- END Top Nav -->
+
+  <Alerts />
 </template>
 
 <style scoped>

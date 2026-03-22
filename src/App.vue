@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { createInstance } from "@ogis/waymark-js";
 import "@ogis/waymark-js/dist/waymark-js.css";
 import iconSprite from "@/assets/icons/ogisNav-icons.svg?raw";
@@ -34,7 +34,6 @@ const {
 } = useUI();
 
 const handleMapClick = () => {
-	// If Mobile Nav is visible, close it
 	if (isNavVisible.value && !isDesktop.value) {
 		closeNav();
 	}
@@ -45,10 +44,7 @@ const handleMapClick = () => {
 	}
 };
 
-const instanceReady = ref(false);
-
 onMounted(() => {
-	// Open the locate panel by default on desktop
 	if (isDesktop.value) {
 		openPanel("locate", LocatePanel);
 	}
@@ -58,12 +54,11 @@ onMounted(() => {
 		debug: props.debug,
 		id: "waymark",
 		mapOptions: {
-			attributionControl: false,
+			attributionControl: true,
 			...props.mapOptions,
 		},
 		onLoad: (WaymarkInstance) => {
 			setInstance(WaymarkInstance);
-			instanceReady.value = true;
 		},
 	});
 });
@@ -71,7 +66,7 @@ onMounted(() => {
 
 <template>
 	<div style="display: none" v-html="iconSprite"></div>
-	<div id="top" v-if="instanceReady">
+	<div id="top">
 		<Top />
 	</div>
 
