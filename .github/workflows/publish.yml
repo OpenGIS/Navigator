@@ -33,3 +33,5 @@ jobs:
       - run: npm ci
       - run: npm publish --provenance
         if: steps.version.outputs.changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
