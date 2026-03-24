@@ -10,7 +10,7 @@ A free, Open-Source navigation app for the real world.
 
 | Component          | Source                                                                                                            |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| **Map Data**       | &copy;[OpenStreetMap contributors](https://www.openstreetmap.org/copyright)                                       |
+| **Map Data**       | &copy; [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)                                       |
 | **Tile Hosting**   | [OpenFreeMap](https://openfreemap.org)                                                                            |
 | **Rendering**      | [MapLibre GL JS](https://maplibre.org/)                                                                           |
 | **Tile Schema**    | [OpenMapTiles](https://www.openmaptiles.org/) / [OSM Bright](https://github.com/openmaptiles/osm-bright-gl-style) |
