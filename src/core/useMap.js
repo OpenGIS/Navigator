@@ -117,3 +117,16 @@ export const useMap = (containerRef = null, options = {}) => {
     };
 };
 
+/**
+ * Retrieve the MapLibre map instance for a given Navigator instance ID
+ * without requiring a Vue inject context. Use this from callbacks or
+ * composables that run outside of component setup (e.g. geolocation handlers).
+ *
+ * @param {string} instanceId - The Navigator instance ID (from inject or cached)
+ * @returns {import('maplibre-gl').Map | null}
+ */
+export const getMapInstance = (instanceId) => {
+    const cached = mapCache.get(instanceId);
+    return cached ? cached.mapInstance : null;
+};
+

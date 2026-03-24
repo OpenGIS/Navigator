@@ -3,13 +3,14 @@ import Alerts from "@/components/ui/top/alerts.vue";
 import MenuPanel from "@/components/ui/side/menu.vue";
 import { useUI } from "@/core/useUI";
 import Icon from "@/components/ui/icon.vue";
+import LocateButton from "@/features/locate/button.vue";
 
 const { togglePanel } = useUI();
 </script>
 
 <template>
   <!-- START Top Nav -->
-  <nav class="navbar navbar-dark bg-primary">
+  <nav class="navbar navbar-dark navigator-navbar">
     <div class="container-fluid">
       <!-- START Start -->
       <div class="start">
@@ -30,7 +31,11 @@ const { togglePanel } = useUI();
       <!-- END Middle -->
 
       <!-- START End -->
-      <ul class="end nav"></ul>
+      <ul class="end nav">
+        <li class="nav-item mx-1">
+          <LocateButton />
+        </li>
+      </ul>
       <!-- END End -->
     </div>
   </nav>
@@ -40,6 +45,10 @@ const { togglePanel } = useUI();
 </template>
 
 <style scoped>
+.navigator-navbar {
+  background-color: #1a1a1a;
+}
+
 .navbar-toggler:focus {
   box-shadow: none;
   border: 0;

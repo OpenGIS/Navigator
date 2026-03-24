@@ -128,6 +128,7 @@ Current mapping:
 | `docs/1.instances.md` | `tests/e2e/1.instances.spec.js` | — |
 | `docs/2.core.md` | `tests/e2e/2.core.spec.js` | `tests/e2e/screenshots/2.core.spec.js` |
 | `docs/3.features.md` | — (developer guide, no runtime behaviour) | — |
+| `docs/features/1.locate.md` | `tests/e2e/features/1.locate.spec.js` | — |
 
 ---
 
