@@ -163,10 +163,13 @@ Closes the panel without changing the active component.
 
 `isFirstLoad` is `true` when the instance has no persisted map view in `localStorage` (i.e. the user has never visited before with this instance id). It becomes `false` once the map is moved (the view storage key is written) or when `setFirstLoadComplete()` is called explicitly.
 
-On the first visit, an **About modal** is displayed welcoming the user to Navigator. Dismissing the modal calls `closeAboutModal()`, which also marks the first load as complete.
+On the first visit, an **About modal** is displayed welcoming the user to Navigator. Dismissing the modal calls `closeAboutModal()`, which also marks the first load as complete. The About modal can also be re-opened at any time via the **About** button in the navigation menu.
 
 ```js
-const { isFirstLoad, showAboutModal, closeAboutModal } = useUI();
+const { isFirstLoad, showAboutModal, openAboutModal, closeAboutModal } = useUI();
+
+// Open the About modal programmatically
+openAboutModal();
 
 // Close the About modal (also marks first load complete if applicable)
 closeAboutModal();
@@ -211,4 +214,5 @@ closeAboutModal();
 | `closeNav` | `()` | Close navigation sidebar |
 | `setNavExpanded` | `(value)` | Set nav expanded state directly |
 | `setFirstLoadComplete` | `()` | Manually mark first load as complete |
+| `openAboutModal` | `()` | Open the About modal |
 | `closeAboutModal` | `()` | Close the About modal (marks first load complete) |

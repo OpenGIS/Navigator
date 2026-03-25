@@ -137,6 +137,10 @@ export const useUI = () => {
         s.isFirstLoad.value = false;
     };
 
+    const openAboutModal = () => {
+        s.showAboutModal.value = true;
+    };
+
     const closeAboutModal = () => {
         s.showAboutModal.value = false;
         if (s.isFirstLoad.value) {
@@ -171,6 +175,7 @@ export const useUI = () => {
         togglePanelExpanded,
         setPanelExpanded,
         setFirstLoadComplete,
+        openAboutModal,
         closeAboutModal,
     };
 };
