@@ -53,14 +53,14 @@ export const useLocate = () => {
     const createPositionElement = () => {
         const el = document.createElement("div");
         el.className = "navigator-locate-position";
-        el.innerHTML = `<svg width="32" height="32" fill="currentColor"><use href="#position-heading"/></svg>`;
+        el.innerHTML = `<svg width="48" height="48" fill="currentColor"><use href="#position-heading"/></svg>`;
         return el;
     };
 
     const createHeadingElement = () => {
         const el = document.createElement("div");
         el.className = "navigator-locate-heading";
-        el.innerHTML = `<svg width="32" height="32" fill="currentColor"><use href="#position-heading"/></svg>`;
+        el.innerHTML = `<svg width="48" height="48" fill="currentColor"><use href="#position-heading"/></svg>`;
         return el;
     };
 
