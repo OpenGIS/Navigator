@@ -122,9 +122,9 @@ If the device provides a compass bearing via the [`DeviceOrientationEvent`](http
 
 Using `DeviceOrientationEvent` (rather than `GeolocationCoordinates.heading`) means the heading indicator is stable at rest — it reflects the compass direction the device is pointing, not the direction it is travelling.
 
-On **iOS Safari (≥ 13)**, `DeviceOrientationEvent.requestPermission()` is called when the user first enables Locate. This fires from the same user-gesture as the geolocation permission request, so it appears as a single browser prompt rather than two separate dialogs.
+On **iOS Safari (≥ 13)**, `DeviceOrientationEvent.requestPermission()` is called when the user first enables Locate. This fires from the same user-gesture as the geolocation permission request, so it appears as a single browser prompt rather than two separate dialogs. iOS provides the true compass bearing via the non-standard `event.webkitCompassHeading` property (0–360° clockwise from north). The feature prefers this over `event.alpha`, which on iOS is only relative to the device's starting orientation and would otherwise cause the heading to start at 0° (north) regardless of the actual direction.
 
-On **Android** and **desktop** browsers the orientation API is available without an explicit permission grant.
+On **Android** and **desktop** browsers the `deviceorientationabsolute` event provides an absolute compass bearing directly. The `alpha` property is converted from counter-clockwise to clockwise (`(360 - alpha) % 360`).
 
 If no orientation data is available (e.g. desktop without a sensor, or permission denied), only the position marker is shown.
 

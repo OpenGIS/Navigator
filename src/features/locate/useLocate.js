@@ -153,15 +153,28 @@ export const useLocate = () => {
 
         const handler = (event) => {
             if (event.alpha === null) return;
-            // Skip relative (non-compass) readings from the generic event
-            if ("absolute" in event && !event.absolute) return;
+            // Skip relative (non-compass) readings from the generic event,
+            // unless the event carries a webkitCompassHeading (iOS Safari).
+            if (
+                "absolute" in event &&
+                !event.absolute &&
+                typeof event.webkitCompassHeading !== "number"
+            )
+                return;
 
             // Valid reading received — clear any loss state and reset the watchdog.
             c.headingLost.value = false;
             scheduleHeadingTimeout();
 
-            // alpha increases counter-clockwise; convert to a clockwise compass bearing.
-            const bearing = (360 - event.alpha) % 360;
+            // iOS Safari provides a true compass heading via webkitCompassHeading
+            // (0-360° clockwise from north). Prefer it over alpha, which on iOS
+            // is only relative to the device's starting orientation.
+            // For absolute events (Android), convert alpha (counter-clockwise) to
+            // a clockwise compass bearing.
+            const bearing =
+                typeof event.webkitCompassHeading === "number"
+                    ? event.webkitCompassHeading
+                    : (360 - event.alpha) % 360;
 
             if (c.smoothedHeading === null) {
                 c.smoothedHeading = bearing;
