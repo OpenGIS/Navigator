@@ -1,3 +1,3 @@
 # To-Do List
 
-1/ Update @agents.md to specify that in examples and documentation, the following default coordinates should be used: lat: 50.6539, lng: -128.0094. This is the Scarlet Ibis Pub in Holberg, British Columbia Canada. Update @readme.md and all @docs/ to use these coords.
+1/ There is a bug with Chrome desktop where the map is not zoomable using the mouse scroll wheel. The app works correctly everywhere else tested, including Chrome mobile. Instead of zooming the map, the entire app gets "pulled" up and down, indicating that the browser is treating the gesture as a scroll instead of a zoom. Diagnose this issue and implement a fix.
