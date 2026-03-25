@@ -21,6 +21,6 @@ defineProps({
 
 <template>
   <svg :width="width" :height="height" :fill="fill">
-    <use :xlink:href="`#${name}`" />
+    <use :href="`#${name}`" />
   </svg>
 </template>
