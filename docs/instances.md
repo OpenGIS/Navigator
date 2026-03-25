@@ -53,7 +53,7 @@ Navigator.init({
   id: 'my-map',
   mapOptions: {
     zoom: 12,
-    center: [-0.12, 51.5],
+    center: [-128.0094, 50.6539],
     bearing: 45,
   },
 });
@@ -73,8 +73,8 @@ Each call to `Navigator.init()` creates a fully isolated Vue application with it
   import Navigator from '@ogis/navigator';
   import '@ogis/navigator/navigator.css';
 
-  Navigator.init({ id: 'map-a', mapOptions: { center: [-0.12, 51.5], zoom: 10 } });
-  Navigator.init({ id: 'map-b', mapOptions: { center: [2.35, 48.85], zoom: 10 } });
+  Navigator.init({ id: 'map-a', mapOptions: { center: [-128.0094, 50.6539], zoom: 10 } });
+  Navigator.init({ id: 'map-b', mapOptions: { center: [-128.0094, 50.6539], zoom: 14 } });
 </script>
 ```
 

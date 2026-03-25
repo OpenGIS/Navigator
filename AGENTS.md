@@ -108,6 +108,20 @@ Core elements use classes, not ids, to avoid collisions in multi-instance setups
 - `.navigator-top` — top navigation bar
 - `.navigator-panel` — Bootstrap offcanvas side panel
 
+### Default Coordinates
+
+Use the following coordinates in all examples and documentation:
+
+```
+lat: 50.6539, lng: -128.0094   // Scarlet Ibis Pub, Holberg, British Columbia, Canada
+```
+
+In MapLibre `center` arrays (which are `[lng, lat]`):
+
+```js
+center: [-128.0094, 50.6539]
+```
+
 ### Features
 
 A feature is a self-contained directory under `src/features/{name}/` containing a composable, a panel component, a button component, and optionally a storage namespace. See `docs/features.md` for the full pattern.

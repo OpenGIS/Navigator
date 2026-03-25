@@ -42,7 +42,7 @@ Navigator.init({
   id: "my-map", // DOM element id to mount into (created if absent); defaults to 'navigator'
   mapOptions: {
     // passed directly to the MapLibre Map constructor
-    center: [-0.12, 51.5],
+    center: [-128.0094, 50.6539],
     zoom: 12,
   },
 });
@@ -53,14 +53,8 @@ Navigator.init({
 Each call to `Navigator.init()` creates a fully isolated instance with its own map, UI state, and localStorage namespace.
 
 ```js
-Navigator.init({
-  id: "map-a",
-  mapOptions: { center: [-0.12, 51.5], zoom: 10 },
-});
-Navigator.init({
-  id: "map-b",
-  mapOptions: { center: [2.35, 48.85], zoom: 10 },
-});
+  Navigator.init({ id: 'map-a', mapOptions: { center: [-128.0094, 50.6539], zoom: 10 } });
+  Navigator.init({ id: 'map-b', mapOptions: { center: [-128.0094, 50.6539], zoom: 14 } });
 ```
 
 See [`docs/instances.md`](docs/instances.md) for full details.
