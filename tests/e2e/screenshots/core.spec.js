@@ -32,8 +32,8 @@ test("useUI / First load — desktop initial load", async ({ page }) => {
   await page.goto("/");
   await page.waitForLoadState("networkidle");
 
-  // Wait for panel slide-in to complete
-  await page.locator(".navigator-panel").waitFor({ state: "visible" });
+  // Wait for About modal to appear
+  await page.locator("#about-modal").waitFor({ state: "visible" });
   await page.waitForTimeout(400);
 
   await page.screenshot({
@@ -70,6 +70,10 @@ test("useMap / URL hash — share link in menu", async ({ page }) => {
   await withNoViewStorage(page);
   await page.goto(`/${TEST_HASH}`);
   await page.waitForLoadState("networkidle");
+
+  // Dismiss About modal (first-load)
+  await page.locator("#about-modal-close").click();
+  await page.locator("#about-modal").waitFor({ state: "hidden" });
 
   await page.locator(".navigator-panel").waitFor({ state: "visible" });
   await page.waitForTimeout(400);

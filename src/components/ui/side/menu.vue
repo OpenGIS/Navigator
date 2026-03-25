@@ -7,7 +7,7 @@ import Icon from "@/components/ui/icon.vue";
 import SettingsPanel from "@/features/settings/panel.vue";
 
 const { currentView } = useMap();
-const { togglePanel } = useUI();
+const { togglePanel, openAboutModal } = useUI();
 const { mode: locateMode, headingLost, position, permissionGranted, retryOrientation, retryPosition } = useLocate();
 
 const sharePosition = ref(false);
@@ -196,6 +196,18 @@ const shareUrl = computed(() => {
     >
       <Icon width="16" height="16" fill="currentColor" name="gear" />
       Settings
+    </button>
+  </div>
+
+  <div class="sidebar-section sidebar-section-body p-3 border-top">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary w-100 d-flex align-items-center gap-2"
+      id="about-button"
+      @click="openAboutModal"
+    >
+      <Icon width="16" height="16" fill="currentColor" name="info-circle" />
+      About
     </button>
   </div>
 </template>

@@ -4,7 +4,7 @@ import { test } from "@playwright/test";
  * README screenshot — assets/screenshots/app-preview.png
  *
  * Captures the app in desktop mode on initial load (first visit, panel open,
- * first-load alert visible) at the standard test view to use as the main
+ * about modal visible) at the standard test view to use as the main
  * README preview image.
  */
 
@@ -17,6 +17,10 @@ test("README — desktop initial load", async ({ page }) => {
   await page.addInitScript(() => localStorage.removeItem("navigator_view_app"));
   await page.goto(`/${TEST_HASH}`);
   await page.waitForLoadState("networkidle");
+
+  // Dismiss About modal (first-load) to reveal the panel and map
+  await page.locator("#about-modal-close").click();
+  await page.locator("#about-modal").waitFor({ state: "hidden" });
 
   // Wait for panel slide-in to complete
   await page.locator(".navigator-panel").waitFor({ state: "visible" });

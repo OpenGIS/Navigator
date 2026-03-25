@@ -18,12 +18,26 @@ const withGrantedStorage = (page) =>
             "navigator_locate_app",
             JSON.stringify({ permissionGranted: true }),
         );
+        // Seed view storage so the About modal doesn't appear
+        localStorage.setItem(
+            "navigator_view_app",
+            JSON.stringify({ mapView: { center: { lat: 51.5, lng: -0.1 }, zoom: 10 } }),
+        );
     });
 
 const grantGeolocation = (page, coords = { latitude: 51.5, longitude: -0.1 }) =>
     page.context().grantPermissions(["geolocation"]).then(() =>
         page.context().setGeolocation(coords),
     );
+
+/** Dismiss the About modal if it appears (first-load state). */
+const dismissAboutModal = async (page) => {
+    const modal = page.locator("#about-modal");
+    if (await modal.isVisible().catch(() => false)) {
+        await page.locator("#about-modal-close").click();
+        await modal.waitFor({ state: "hidden" });
+    }
+};
 
 // ─── Locate / Button ──────────────────────────────────────────────────────────
 
@@ -32,6 +46,7 @@ test.describe("Locate / Button", () => {
         await withNoLocateStorage(page);
         await page.goto("/");
         await page.waitForLoadState("networkidle");
+        await dismissAboutModal(page);
     });
 
     test("locate button is visible in the top navigation bar", async ({ page }) => {
@@ -55,6 +70,7 @@ test.describe("Locate / Confirmation modal", () => {
         await withNoLocateStorage(page);
         await page.goto("/");
         await page.waitForLoadState("networkidle");
+        await dismissAboutModal(page);
     });
 
     test("confirmation modal appears on first click with no stored permission", async ({

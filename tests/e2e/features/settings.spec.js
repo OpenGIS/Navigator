@@ -2,6 +2,18 @@ import { test, expect } from "@playwright/test";
 
 const SETTINGS_STORAGE_KEY = "navigator_settings_app";
 
+// Seed view storage so the About modal does not appear on fresh contexts
+test.beforeEach(async ({ page }) => {
+	await page.addInitScript(() => {
+		if (!localStorage.getItem("navigator_view_app")) {
+			localStorage.setItem(
+				"navigator_view_app",
+				JSON.stringify({ mapView: { center: { lat: 51.5, lng: -0.1 }, zoom: 10 } }),
+			);
+		}
+	});
+});
+
 /** Ensures the menu panel is open, toggling it if currently closed. */
 async function openMenuPanel(page) {
 	const offcanvas = page.locator(".offcanvas.show");

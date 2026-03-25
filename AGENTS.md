@@ -53,11 +53,10 @@ src/
   components/
     ui/
       top.vue           # top navigation bar
+      about.vue         # About modal (first-load + menu button)
       side/
         panel.vue       # Bootstrap offcanvas side panel
         menu.vue        # default panel content (main navigation)
-      top/
-        alerts.vue      # first-load alert
 ```
 
 ---

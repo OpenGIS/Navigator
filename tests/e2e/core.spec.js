@@ -21,6 +21,15 @@ const withViewStorage = (page) =>
     ),
   );
 
+/** Dismiss the About modal if it appears (first-load state). */
+const dismissAboutModal = async (page) => {
+  const modal = page.locator("#about-modal");
+  if (await modal.isVisible().catch(() => false)) {
+    await page.locator("#about-modal-close").click();
+    await expect(modal).toBeHidden();
+  }
+};
+
 // ─── useMap / URL hash ────────────────────────────────────────────────────────
 
 test.describe("useMap / URL hash", () => {
@@ -49,6 +58,7 @@ test.describe("useMap / URL hash", () => {
     await withNoViewStorage(page);
     await page.goto("/#map=10/51.500000/-0.100000");
     await page.waitForLoadState("networkidle");
+    await dismissAboutModal(page);
 
     const initialUrl = page.url();
 
@@ -80,6 +90,7 @@ test.describe("useMap / URL hash", () => {
     await withNoViewStorage(page);
     await page.goto("/");
     await page.waitForLoadState("networkidle");
+    await dismissAboutModal(page);
 
     await expect(page.getByText("Current view")).toBeHidden();
 
@@ -186,6 +197,7 @@ test.describe("useMap / View persistence", () => {
     await page.goto("/");
     await expect(page.locator(".navigator-map canvas")).toBeVisible();
     await page.waitForLoadState("networkidle");
+    await dismissAboutModal(page);
 
     // No view persisted yet
     const initial = await page.evaluate((k) => localStorage.getItem(k), VIEW_KEY);
@@ -320,28 +332,33 @@ test.describe("useUI / Panel", () => {
 // ─── useUI / First load ───────────────────────────────────────────────────────
 
 test.describe("useUI / First load", () => {
-  test("alert is visible on first visit", async ({ page }) => {
+  test("about modal is visible on first visit", async ({ page }) => {
     await withNoViewStorage(page);
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#first-load-alert")).toBeVisible();
+    await expect(page.locator("#about-modal")).toBeVisible();
+    await expect(page.getByText("About Navigator")).toBeVisible();
     await expect(page.getByText("menu")).toBeVisible();
   });
 
-  test("alert is absent on returning visit", async ({ page }) => {
+  test("about modal is absent on returning visit", async ({ page }) => {
     await withViewStorage(page);
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#first-load-alert")).toHaveCount(0);
+    await expect(page.locator("#about-modal")).toHaveCount(0);
   });
 
-  test("alert is absent after view storage is written and page is reloaded", async ({ page }) => {
+  test("about modal is absent after view storage is written and page is reloaded", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#first-load-alert")).toBeVisible();
+    await expect(page.locator("#about-modal")).toBeVisible();
+
+    // Dismiss the modal
+    await page.locator("#about-modal-close").click();
+    await expect(page.locator("#about-modal")).toHaveCount(0);
 
     // Simulate useMap writing the view key (as it does on moveend)
     await page.evaluate((k) => {
@@ -354,18 +371,30 @@ test.describe("useUI / First load", () => {
     await page.reload();
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#first-load-alert")).toHaveCount(0);
+    await expect(page.locator("#about-modal")).toHaveCount(0);
   });
 
-  test("alert can be dismissed", async ({ page }) => {
+  test("about modal can be dismissed", async ({ page }) => {
     await withNoViewStorage(page);
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    await expect(page.locator("#first-load-alert")).toBeVisible();
+    await expect(page.locator("#about-modal")).toBeVisible();
 
-    await page.locator("#first-load-alert .btn-close").click();
+    await page.locator("#about-modal-close").click();
 
-    await expect(page.locator("#first-load-alert")).toHaveCount(0);
+    await expect(page.locator("#about-modal")).toHaveCount(0);
+  });
+
+  test("about button in menu opens the about modal", async ({ page }) => {
+    await withViewStorage(page);
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    await expect(page.locator(".navigator-panel")).toBeVisible({ timeout: 5000 });
+    await expect(page.locator("#about-modal")).toHaveCount(0);
+
+    await page.locator("#about-button").click();
+    await expect(page.locator("#about-modal")).toBeVisible();
   });
 });

@@ -10,6 +10,15 @@ import { test, expect } from "@playwright/test";
 const INSTANCE_ID = "app";
 const VIEW_KEY = `navigator_view_${INSTANCE_ID}`;
 
+/** Dismiss the About modal if it appears (first-load state). */
+const dismissAboutModal = async (page) => {
+  const modal = page.locator("#about-modal");
+  if (await modal.isVisible().catch(() => false)) {
+    await page.locator("#about-modal-close").click();
+    await modal.waitFor({ state: "hidden" });
+  }
+};
+
 // ─── Creating an Instance ────────────────────────────────────────────────────
 
 test.describe("Creating an Instance", () => {
@@ -28,7 +37,7 @@ test.describe("Creating an Instance", () => {
 test.describe("id — Instance Identifier", () => {
   test("storage key is scoped to the instance id", async ({ page }) => {
     // Seed the view key so the app reads it on load. If the wrong key is used
-    // the first-load alert would still appear (it checks for this key).
+    // the about modal would still appear (it checks for this key).
     await page.addInitScript(({ key }) => {
       localStorage.setItem(
         key,
@@ -39,8 +48,8 @@ test.describe("id — Instance Identifier", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // The app reads the seeded key — first-load alert should not appear
-    await expect(page.locator("#first-load-alert")).toHaveCount(0);
+    // The app reads the seeded key — about modal should not appear
+    await expect(page.locator("#about-modal")).toHaveCount(0);
   });
 
   test("key format is navigator_{namespace}_{id}", async ({ page }) => {
@@ -49,6 +58,7 @@ test.describe("id — Instance Identifier", () => {
     await page.goto("/");
     await expect(page.locator(".navigator-map canvas")).toBeVisible();
     await page.waitForLoadState("networkidle");
+    await dismissAboutModal(page);
 
     // Pan the map to trigger a view persistence write
     const canvas = page.locator(".navigator-map canvas");
@@ -114,6 +124,7 @@ test.describe("Internal Storage Convention", () => {
     await page.goto("/");
     await expect(page.locator(".navigator-map canvas")).toBeVisible();
     await page.waitForLoadState("networkidle");
+    await dismissAboutModal(page);
 
     // No view stored yet
     const initial = await page.evaluate((k) => localStorage.getItem(k), VIEW_KEY);

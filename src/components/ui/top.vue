@@ -1,5 +1,5 @@
 <script setup>
-import Alerts from "@/components/ui/top/alerts.vue";
+import About from "@/components/ui/about.vue";
 import MenuPanel from "@/components/ui/side/menu.vue";
 import { useUI } from "@/core/useUI";
 import { useLocate } from "@/features/locate/useLocate";
@@ -48,7 +48,7 @@ const { hasAlerts } = useLocate();
   </nav>
   <!-- END Top Nav -->
 
-  <Alerts />
+  <About />
 </template>
 
 <style scoped>

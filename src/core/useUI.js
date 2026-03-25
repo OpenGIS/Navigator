@@ -10,9 +10,11 @@ function createState(instanceId) {
     // The "view" namespace mirrors what useMap uses — if that key exists the user has
     // visited before.
     const storageKey = `navigator_view_${instanceId}`;
+    const firstLoad = !localStorage.getItem(storageKey);
     return {
         width: ref(window.innerWidth),
-        isFirstLoad: ref(!localStorage.getItem(storageKey)),
+        isFirstLoad: ref(firstLoad),
+        showAboutModal: ref(firstLoad),
         isNavVisible: ref(window.innerWidth >= 992),
         isNavExpanded: ref(false),
         isPanelVisible: ref(false),
@@ -135,6 +137,17 @@ export const useUI = () => {
         s.isFirstLoad.value = false;
     };
 
+    const openAboutModal = () => {
+        s.showAboutModal.value = true;
+    };
+
+    const closeAboutModal = () => {
+        s.showAboutModal.value = false;
+        if (s.isFirstLoad.value) {
+            setFirstLoadComplete();
+        }
+    };
+
     return {
         // State
         width: s.width,
@@ -145,6 +158,7 @@ export const useUI = () => {
         activePanelId: s.activePanelId,
         activePanelComponent: s.activePanelComponent,
         isFirstLoad: s.isFirstLoad,
+        showAboutModal: s.showAboutModal,
 
         // Computed
         isDesktop,
@@ -161,5 +175,7 @@ export const useUI = () => {
         togglePanelExpanded,
         setPanelExpanded,
         setFirstLoadComplete,
+        openAboutModal,
+        closeAboutModal,
     };
 };

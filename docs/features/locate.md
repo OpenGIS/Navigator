@@ -17,6 +17,10 @@ The Locate button sits in the right slot of the top navigation bar. It has four 
 
 > Icons are sourced from the SVG sprite. Placeholder icons are used until the sprite is implemented.
 
+| Inactive | Active | Following | Error |
+|----------|--------|-----------|-------|
+| ![Inactive](../../assets/screenshots/docs/features/locate/button-inactive.png) | ![Active](../../assets/screenshots/docs/features/locate/button-active.png) | ![Following](../../assets/screenshots/docs/features/locate/button-following.png) | ![Error](../../assets/screenshots/docs/features/locate/button-error.png) |
+
 ### Cycling through states
 
 Clicking the button cycles through the active states:
@@ -76,6 +80,8 @@ Shown the first time the user presses Locate (before the browser prompt).
 - **Allow location access** (primary button) — proceeds to the browser prompt
 - **Cancel** (secondary / close) — dismisses the modal, no action taken
 
+![Confirmation modal](../../assets/screenshots/docs/features/locate/confirmation-modal.png)
+
 ---
 
 ## Permission denied modal
@@ -96,6 +102,8 @@ Shown when the Geolocation API returns a `PERMISSION_DENIED` error. Also shown w
 
 > The `permissionGranted` storage flag is not affected by a denial — it only becomes `true` on a successful fix.
 
+![Permission denied modal](../../assets/screenshots/docs/features/locate/permission-denied-modal.png)
+
 ---
 
 ## Map marker
@@ -105,6 +113,8 @@ Once the user's position is known, a live marker is rendered on the map.
 ### Position marker
 
 A crosshairs icon centred on the user's current `lat`/`lng` coordinate. The marker updates whenever a new position fix arrives.
+
+![Position marker](../../assets/screenshots/docs/features/locate/marker-position.png)
 
 ### Heading marker
 
