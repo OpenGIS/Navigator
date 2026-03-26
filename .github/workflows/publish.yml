@@ -9,7 +9,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -31,5 +31,20 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
       - run: npm ci
+      - name: Get version
+        id: pkg
+        if: steps.version.outputs.changed == 'true'
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
       - run: npm publish --provenance
         if: steps.version.outputs.changed == 'true'
+      - name: Create GitHub release
+        if: steps.version.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag "v${{ steps.pkg.outputs.version }}"
+          git push origin "v${{ steps.pkg.outputs.version }}"
+          gh release create "v${{ steps.pkg.outputs.version }}" \
+            --title "v${{ steps.pkg.outputs.version }}" \
+            --generate-notes \
+            --latest
