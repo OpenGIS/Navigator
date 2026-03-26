@@ -108,7 +108,7 @@ test.describe("useUI / First load", () => {
 
     await expect(page.locator("#about-modal")).toBeVisible();
     await expect(page.getByText("About Navigator")).toBeVisible();
-    await expect(page.getByText("menu")).toBeVisible();
+    await expect(page.locator("#about-modal").getByText("menu", { exact: true })).toBeVisible();
   });
 
   test("about modal is absent on returning visit", async ({ page }) => {

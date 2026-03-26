@@ -26,7 +26,7 @@ const panelRef = ref(null);
     data-bs-scroll="true"
     data-bs-backdrop="false"
   >
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body p-0 d-flex flex-column">
       <!-- Panel Content -->
       <component :is="activePanelComponent" v-if="activePanelComponent" />
     </div>

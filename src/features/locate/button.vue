@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useLocate } from "@/features/locate/useLocate";
-import Icon from "@/components/ui/icon.vue";
+import IconButton from "@/components/ui/icon-button.vue";
 
 const { mode, showConfirmModal, showErrorModal, cycle, confirmLocate } =
     useLocate();
@@ -27,25 +27,16 @@ const label = computed(() => {
 </script>
 
 <template>
-    <button
-        type="button"
-        class="locate-btn border-0 bg-transparent d-flex flex-column align-items-center p-1"
+    <IconButton
+        :icon="iconName"
+        :label="label"
+        :icon-color="iconColor"
+        :active="mode !== null && mode !== 'error'"
         :class="{ 'locate-btn--error': mode === 'error' }"
         id="locate-button"
         :aria-label="label"
-        :aria-pressed="mode !== null && mode !== 'error'"
         @click="cycle"
-    >
-        <Icon
-            width="40"
-            height="40"
-            :fill="iconColor"
-            :name="iconName"
-        />
-        <span class="locate-btn__label" :style="{ color: iconColor }">{{
-            label
-        }}</span>
-    </button>
+    />
 
     <!-- Confirmation modal — shown on first use before the browser permission prompt -->
     <Teleport to="body">
@@ -170,35 +161,6 @@ const label = computed(() => {
         </template>
     </Teleport>
 </template>
-
-<style scoped>
-.locate-btn {
-    cursor: pointer;
-    line-height: 1;
-    position: relative;
-    padding-bottom: 18px; /* reserve space for the absolutely-positioned label */
-}
-
-.locate-btn:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
-    border-radius: 4px;
-}
-
-.locate-btn__label {
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    /* Take the label out of the flow so it never widens the button */
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    pointer-events: none;
-}
-</style>
 
 <style>
 /* Global: ensure modals sit above the top nav bar */

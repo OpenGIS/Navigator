@@ -3,7 +3,7 @@ import About from "@/components/ui/about.vue";
 import MenuPanel from "@/components/ui/side/menu.vue";
 import { useUI } from "@/core/useUI";
 import { useLocate } from "@/features/locate/useLocate";
-import Icon from "@/components/ui/icon.vue";
+import IconButton from "@/components/ui/icon-button.vue";
 import LocateButton from "@/features/locate/button.vue";
 
 const { togglePanel } = useUI();
@@ -16,18 +16,19 @@ const { hasAlerts } = useLocate();
     <div class="container-fluid">
       <!-- START Start -->
       <div class="start">
-        <button
-          type="button"
-          class="navbar-toggler border-0 position-relative"
+        <IconButton
+          icon="sidebar-info"
+          label="Menu"
+          :icon-size="48"
+          class="navbar-toggler position-relative"
           @click="togglePanel('menu', MenuPanel)"
         >
-          <Icon width="48" height="48" fill="currentColor" name="sidebar-info" />
           <span
             v-if="hasAlerts"
             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger navigator-alert-badge"
             aria-live="polite"
           >!<span class="visually-hidden">menu has alerts</span></span>
-        </button>
+        </IconButton>
       </div>
       <!-- END Start -->
 
