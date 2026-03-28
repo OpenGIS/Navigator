@@ -2,18 +2,55 @@
 
 A map for everyone, right in the browser.
 
-The app is free to use, does not require any registration, no app stores and does not collect any personal data.
+The app is free to use: no API keys, no registration, no app stores and no invasions of privacy. Just open Navigator and start exploring.
+
+This project is inspired by, and made possible thanks to the [OpenStreetMap](https://www.openstreetmap.org/) ecosystem. Special thanks to [OpenFreeMap](https://openfreemap.org/) for their tile hosting that makes this project possible.
+
+[&laquo;&laquo; Use Navigator &raquo;&raquo;](https://www.ogis.org/navigator/)
+
+## Features
+
+- No install, no account.
+- GPS locate with compass heading.
+- Once loaded, works offline (cached tiles and data).
+- Multilingual (auto-detects browser language).
+- Shareable map links.
+- OpenStreetMap integration (View/Edit on OSM).
+- Map view synced between sessions.
+- User preference settings.
+- Works on any device.
 
 ## Aims
 
 - A handy, general purpose mapping tool that anyone can use.
 - Offer low barriers to, and promote Open data.
 - Tighten the feedback loop between Open data contributors and consumers.
-- Be Open
+- Be Open.
 
-[Use Navigator](https://www.ogis.org/navigator/)
+[![App Preview](assets/screenshots/docs/core/about-panel.png)](https://www.ogis.org/navigator/)
 
-[![App Preview](assets/screenshots/app-preview.png)](https://www.ogis.org/navigator/)
+[&laquo;&laquo; Use Navigator &raquo;&raquo;](https://www.ogis.org/navigator/)
+
+## Planned Changes
+
+- Worldwide language support.
+- Search ([Nominatim](https://nominatim.org/) integration).
+- Better handling of denied location permissions.
+- Improved offline capabilities ([PWA](https://developer.mozilla.org/docs/Web/Progressive_web_apps) features).
+- A developer fiendly plugin system.
+- Dark map style.
+
+## Drawbacks and Limitations
+
+I believe the benefits of a web app far outweigh the drawbacks, but it's important to be transparent about the limitations:
+
+- Location permissions are required for GPS/Compass features. Some users have a deny-all approach to web browser permissions and changing permissions varies widely between browsers and devices. _This is a genuine pain point, with not much you can do other than warn and inform the user_
+
+- The app does not work in the background or when the device is locked. _This is a common limitation of web apps, but I want to explore ways to improve this with better caching and PWA features_
+
+- Depending on a single tile provider ([OpenFreeMap](https://openfreemap.org/)) creates a single point of failure. _Their implementation is Open-Source and [self-hosting](https://github.com/hyperknot/openfreemap/blob/main/docs/self_hosting.md) is something I want to persue_
+
+- While the app works well with no internet service, it does require an initial connection to load the app assets and map tiles. _This can be hard to communicate to users and set expectations._
 
 ## Thanks Open Source!
 

@@ -62,7 +62,7 @@ test("permission denied modal — error state", async ({ page }) => {
     await page.waitForLoadState("networkidle");
 
     await page.locator("#locate-button").click();
-    await page.getByText("Location access denied").waitFor({ state: "visible", timeout: 5000 });
+    await page.getByText("Location Permission Denied").waitFor({ state: "visible", timeout: 5000 });
     await page.waitForTimeout(200);
 
     await page.screenshot({

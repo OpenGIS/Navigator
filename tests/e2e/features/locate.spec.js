@@ -269,7 +269,7 @@ test.describe("Locate / Error state", () => {
             })
             .toMatch(/Error/);
 
-        await expect(page.getByText("Location access denied")).toBeVisible({
+        await expect(page.getByText("Location Permission Denied")).toBeVisible({
             timeout: 5000,
         });
     });
@@ -282,12 +282,12 @@ test.describe("Locate / Error state", () => {
         await page.locator("#locate-button").click();
 
         await expect
-            .poll(() => page.getByText("Location access denied").isVisible(), {
+            .poll(() => page.getByText("Location Permission Denied").isVisible(), {
                 timeout: 5000,
             })
             .toBe(true);
 
-        await expect(page.getByText(/Chrome \/ Edge/)).toBeVisible();
+        await expect(page.getByText(/Reloading this page/)).toBeVisible();
     });
 
     test("closing the error modal does not clear the error state", async ({
@@ -300,13 +300,13 @@ test.describe("Locate / Error state", () => {
         await page.locator("#locate-button").click();
 
         await expect
-            .poll(() => page.getByText("Location access denied").isVisible(), {
+            .poll(() => page.getByText("Location Permission Denied").isVisible(), {
                 timeout: 5000,
             })
             .toBe(true);
 
         await page.locator("#locate-error-close").click();
-        await expect(page.getByText("Location access denied")).toBeHidden();
+        await expect(page.getByText("Location Permission Denied")).toBeHidden();
         await expect(page.locator("#locate-button")).toContainText("Error");
     });
 
@@ -326,10 +326,10 @@ test.describe("Locate / Error state", () => {
             .toBe(true);
 
         await page.locator("#locate-error-close").click();
-        await expect(page.getByText("Location access denied")).toBeHidden();
+        await expect(page.getByText("Location Permission Denied")).toBeHidden();
 
         await page.locator("#locate-button").click();
-        await expect(page.getByText("Location access denied")).toBeVisible();
+        await expect(page.getByText("Location Permission Denied")).toBeVisible();
     });
 });
 
@@ -462,7 +462,7 @@ test.describe("Locate / Error modal retry", () => {
         await page.locator("#locate-error-retry").click();
 
         // Modal should close
-        await expect(page.getByText("Location access denied")).toBeHidden();
+        await expect(page.getByText("Location Permission Denied")).toBeHidden();
 
         // Locate button should exit error state
         await expect
