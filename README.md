@@ -27,7 +27,7 @@ This project is inspired by, and made possible thanks to the [OpenStreetMap](htt
 - Tighten the feedback loop between Open data contributors and consumers.
 - Be Open.
 
-[![App Preview](assets/screenshots/docs/core/about-panel.png)](https://www.ogis.org/navigator/)
+[![App Preview](assets/screenshots/app-preview.png)](https://www.ogis.org/navigator/)
 
 [&laquo;&laquo; Use Navigator &raquo;&raquo;](https://www.ogis.org/navigator/)
 
