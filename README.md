@@ -2,9 +2,14 @@
 
 A map for everyone, right in the browser.
 
-Navigator aims to be a general purpose mapping tool that anyone can use, built with Open-Source software and Open data.
+The app is free to use, does not require any registration, no app stores and does not collect any personal data.
 
-The app is free to use, does not require any registration, and does not collect any personal data.
+## Aims
+
+- A handy, general purpose mapping tool that anyone can use.
+- Offer low barriers to, and promote Open data.
+- Tighten the feedback loop between Open data contributors and consumers.
+- Be Open
 
 [Use Navigator](https://www.ogis.org/navigator/)
 
